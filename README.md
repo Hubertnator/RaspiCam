@@ -3,7 +3,7 @@
 This is a program that allows you to turn your raspberry Pi into a surveillance camera! 
 
 # Requirements:
-Raspberry Pi (model 3B+ or higher),
+Raspberry Pi (model 3B or higher),
 
 Raspberry Pi Camera
 
