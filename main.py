@@ -11,7 +11,10 @@ from time import sleep
 
 rotated = True; #this will be in a config file.
 mp4_command = "MP4Box -add temp.h264 monitoring.mp4"
+length = input()
 
+config = open("general.conf")
+print(config.read())
 
 #setting camera diode:
 GPIO.setmode(GPIO.BCM)
@@ -34,7 +37,7 @@ RED.start(100)
 #film from raspberry pi in a for loop
 with picamera.PiCamera() as camera:
 
-    camera.resolution = (1280,720)
+    camera.resolution = (640,480)
     if (rotated == True):
         camera.rotation = 180
     else:
@@ -42,7 +45,7 @@ with picamera.PiCamera() as camera:
     
     print("Started recording - DO NOT CLOSE PROGRAM")
     camera.start_recording("temp.h264")
-    sleep(10)
+    sleep(600)
     camera.stop_recording()
     print("RECORDING STOPPED")
 #CONVERSION
