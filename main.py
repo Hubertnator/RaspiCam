@@ -1,9 +1,8 @@
 import RPi.GPIO as GPIO
-import picamera
 import tkinter as tk
 import time
-from subprocess import call
-from time import sleep
+from camera import *
+
 
 #--initializing, creating and configuring main window
 #### THIS WILL BE IN FUTURE VERSIONS, RIGHT NOW IS IN EXPERIMENTAL FILE gui.py
@@ -11,7 +10,9 @@ from time import sleep
 
 rotated = True; #this will be in a config file.
 mp4_command = "MP4Box -add temp.h264 monitoring.mp4"
-length = input()
+
+print("Type in length of video:")
+length = int(input())
 
 config = open("general.conf")
 print(config.read())
@@ -28,33 +29,25 @@ GPIO.setup(green, GPIO.OUT)
 GPIO.setup(blue, GPIO.OUT)
 
 RED = GPIO.PWM(red, 1)
-GREEN = GPIO.PWM(green, 100)
+GREEN = GPIO.PWM(green, 1)
 BLUE = GPIO.PWM(blue, 1)
 
 sleep(2)
 
 RED.start(100)
 #film from raspberry pi in a for loop
-with picamera.PiCamera() as camera:
 
-    camera.resolution = (640,480)
-    if (rotated == True):
-        camera.rotation = 180
-    else:
-        camera.rotation = 0
-    
-    print("Started recording - DO NOT CLOSE PROGRAM")
-    camera.start_recording("temp.h264")
-    sleep(600)
-    camera.stop_recording()
-    print("RECORDING STOPPED")
+camera = Camera()
+camera.Resolution(640,480)
+camera.Rotate(180)
+camera.Record("temp.h264",length)
+
 #CONVERSION
-print("Converting...")
 BLUE.start(60)
 conversion_start = time.time()
-
-call([mp4_command], shell=True)
+camera.ConvertVideo("temp.h264","monitoring.mp4")
 conversion_stop = time.time()
+
 #Conversion complete, cleanup!
 
 RED.start(0)
